@@ -23,12 +23,16 @@ public:
     void clear();
     void set(String name, int value);
     void set(String name, float value);
+    void set(String name, long value);
+    void set(String name, unsigned long value);
     void set(String name, String  value);
     SettingValue* get(String name);
 
     bool getBool(String name, bool defaultValue);
     int getInt(String name, int defaultValue);
     float getFloat(String name, float defaultValue);
+    long getLong(String name, long defaultValue);
+    unsigned long getULong(String name, unsigned long defaultValue);
     String getString(String name, String defaultValue);
 
     static Settings* getInstance();

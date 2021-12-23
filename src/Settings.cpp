@@ -61,11 +61,20 @@ void Settings::set(String name, float value)
     this->set(name, String(value).c_str());
 }
 
+void Settings::set(String name, long value)
+{
+    this->set(name, String(value).c_str());
+}
+
+void Settings::set(String name, unsigned long value)
+{
+    this->set(name, String(value).c_str());
+}
+
 SettingValue* Settings::get(String name)
 {
     Serial.printf("Searching: %s\n", name.c_str());
     SettingValue* current = firstValue;
-    int i = 0;
     while (current)
     {
         if (name.compareTo(current->name) == 0)

@@ -12,8 +12,7 @@
 
 // SGP30 Sensor definitions
 #define SENSOR_BASELINE_UPDATE_FREQ 36e5     // 1 hour
-// #define SENSOR_BASELINE_UPDATE_FREQ 3000     // 1 hour
-#define SENSOR_BASELINE_FIRST_UPDATE 4.32e7  // 12 hours
+#define SENSOR_BASELINE_CALIBRATION_DURATION 4.32e7  // 12 hours
 #define SENSOR_BASELINE_VALIDITY 6.048e8     // 1 week
 
 // BME280 Sensor Definitions

@@ -35,13 +35,15 @@ bool Sensor::begin()
         Adafruit_BME280::FILTER_OFF,
         Adafruit_BME280::STANDBY_MS_0_5);
 
-    // Set up the SGP30 sensor
-    uint16_t tvocBaseline = (uint16_t)settings->getInt(SENSOR_SETTING_TVOC_BASELINE, -1);
-    uint16_t eco2Baseline = (uint16_t)settings->getInt(SENSOR_SETTING_ECO2_BASELINE, -1);
+    if (!needsCalibration()) {
+        // Set up the SGP30 sensor
+        uint16_t tvocBaseline = (uint16_t)settings->getInt(SENSOR_SETTING_TVOC_BASELINE, -1);
+        uint16_t eco2Baseline = (uint16_t)settings->getInt(SENSOR_SETTING_ECO2_BASELINE, -1);
 
-    if (tvocBaseline != -1 && eco2Baseline != -1) {
-        Serial.printf("Restoring baselines. eco2: %d, tvoc: %d\n", eco2Baseline, tvocBaseline);
-        sgp.setIAQBaseline(eco2Baseline, tvocBaseline);
+        if (tvocBaseline != -1 && eco2Baseline != -1) {
+            Serial.printf("Restoring baselines. eco2: %d, tvoc: %d\n", eco2Baseline, tvocBaseline);
+            sgp.setIAQBaseline(eco2Baseline, tvocBaseline);
+        }
     }
 
     return sgp.IAQinit();
@@ -49,30 +51,27 @@ bool Sensor::begin()
 
 bool Sensor::needsCalibration()
 {
+    // TODO time handling
     Settings* settings = Settings::getInstance();
-    float now = millis();
+    unsigned long now = millis();
     float lastUpdate = settings->getFloat(SENSOR_SETTING_BASELINE_UPDATE, -1);
     bool needsCalibration =
-        lastUpdate == -1 || (now - lastUpdate > SENSOR_BASELINE_VALIDITY) || (now - firstRead > SENSOR_BASELINE_FIRST_UPDATE);
+        lastUpdate == -1                                     // No baseline present
+        || now < lastUpdate                                  // Device has been resetted
+        || now < SENSOR_BASELINE_CALIBRATION_DURATION;       // Calibration not completed
 
     return needsCalibration;
 }
 
 void Sensor::storeBaseline()
 {
-    Settings* settings = Settings::getInstance();
-    float now = millis();
-    float lastUpdate = settings->getFloat(SENSOR_SETTING_BASELINE_UPDATE, -1);
-    bool needsCalibration =
-        (now - firstRead < SENSOR_BASELINE_FIRST_UPDATE)     // Not enough time first last update
-        || lastUpdate == -1                                  // No setting preset
-        || (now - lastUpdate > SENSOR_BASELINE_VALIDITY);    // Baseline is expired
-
-    if (needsCalibration) {
+    if (needsCalibration()) {
         Serial.println("Sensor is calibrating");
         return;
     }
 
+    Settings* settings = Settings::getInstance();
+    unsigned long now = millis();
     if (now - lastRead > SENSOR_BASELINE_UPDATE_FREQ)
     {
         lastRead = now;
