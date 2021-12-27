@@ -167,7 +167,7 @@ void Settings::clear()
     SettingValue* next = NULL;
     while (current != NULL) {
         next = current;
-        free(current);
+        delete current;
         current = next;
     }
 
