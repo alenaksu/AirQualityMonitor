@@ -22,7 +22,7 @@ public:
     Gui(DisplayDriver* driver) : gfx(driver, GUI_BITS_PER_PIXEL, GuiPalette) {};
 
     bool begin();
-    void draw(SensorData data);
+    void draw(SensorData &data);
 };
 
 #endif

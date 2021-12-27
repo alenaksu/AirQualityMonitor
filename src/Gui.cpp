@@ -17,7 +17,7 @@ bool Gui::begin() {
     return true;
 }
 
-void Gui::draw(SensorData data) {
+void Gui::draw(SensorData &data) {
     uint16_t w = gfx.getWidth();
     uint16_t padding = 10;
 
