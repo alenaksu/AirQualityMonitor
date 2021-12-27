@@ -35,7 +35,7 @@ void Settings::set(String name, String value)
     if (!settingValue)
     {
         Serial.println("Creating new setting");
-        SettingValue* newValue = (SettingValue*)malloc(sizeof(SettingValue));
+        SettingValue* newValue = new SettingValue;
 
         newValue->name = name;
         newValue->value = value;
