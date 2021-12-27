@@ -18,7 +18,7 @@ Settings::Settings()
         this->load();
     }
 
-    this->firstValue = NULL;
+    this->firstValue = nullptr;
 };
 
 Settings* Settings::getInstance() {
@@ -85,7 +85,7 @@ SettingValue* Settings::get(String name)
         current = current->next;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 float Settings::getFloat(String name, float defaultValue)
@@ -130,7 +130,7 @@ void Settings::save()
     File file = SD.open(SETTINGS_FILE, FILE_WRITE);
 
     SettingValue* current = this->firstValue;
-    while (current != NULL)
+    while (current != nullptr)
     {
         file.printf("%s=%s\n", current->name.c_str(), current->value.c_str());
 
@@ -164,14 +164,14 @@ void Settings::clear()
     SD.remove(SETTINGS_FILE);
 
     SettingValue* current = this->firstValue;
-    SettingValue* next = NULL;
-    while (current != NULL) {
+    SettingValue* next = nullptr;
+    while (current != nullptr) {
         next = current;
         delete current;
         current = next;
     }
 
-    this->firstValue = NULL;
+    this->firstValue = nullptr;
 }
 
 void Settings::load()
